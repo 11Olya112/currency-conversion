@@ -8,8 +8,6 @@
         @change="updateCurrencies(selectedCurrency)"
       >
         <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="UAH">UAH</option>
       </select>
     </div>
     <div class="currency-rates">
