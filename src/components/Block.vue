@@ -2,7 +2,11 @@
   <div class="block">
     <div>
       <label for="currency" class="label">Виберіть валюту: </label>
-      <select id="currency" v-model="selectedCurrency" @change="updateCurrencies(selectedCurrency)">
+      <select
+        id="currency"
+        v-model="selectedCurrency"
+        @change="updateCurrencies(selectedCurrency)"
+      >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="UAH">UAH</option>
@@ -18,7 +22,8 @@
         </thead>
       </table>
     </div>
-    <button @click="showAddCurrencyPopup">Додати валюту</button>
+    <button @click="showAddCurrencyPopup">Додати валюту</button><br /><br />
+    <button @click="updateCurrencies" :disabled="isUpdating">Оновити</button>
     <PopupWindow
       v-if="showPopup"
       @close="hideAddCurrencyPopup"
@@ -44,7 +49,12 @@ export default {
         { code: "BTC", name: "BTC:", rate: 0 },
       ],
       showPopup: false,
+      isUpdating: false,
     };
+  },
+  created() {
+    this.updateCurrencies();
+    setInterval(this.updateCurrencies, 5000);
   },
   mounted() {
     const savedCurrencies = localStorage.getItem("currencies");
@@ -55,23 +65,25 @@ export default {
   },
   methods: {
     updateCurrencies() {
-      
-      const apiKey = "7ecd5129702c4f00896f0738196fdfff";
-      const url = `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&base=${this.selectedCurrency}`;
+      if (!this.isUpdating) {
+        this.isUpdating = true;
+        const apiKey = "7ecd5129702c4f00896f0738196fdfff";
+        const url = `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&base=${this.selectedCurrency}`;
 
-      axios
-        .get(url)
-        .then((response) => {
-          this.currencies.forEach((currency) => {
-            currency.rate = response.data.rates[currency.code];
+        axios
+          .get(url)
+          .then((response) => {
+            this.currencies.forEach((currency) => {
+              currency.rate = response.data.rates[currency.code];
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            this.isUpdating = false;
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-        console.log("update");
+      }
     },
-   
+
     showAddCurrencyPopup() {
       this.showPopup = true;
     },
@@ -79,15 +91,9 @@ export default {
       this.showPopup = false;
     },
     addNewCurrency(newCurrency) {
-      this.currencies = [
-        { code: "USD", name: "USD:", rate: 0 },
-        { code: "EUR", name: "EUR:", rate: 0 },
-        { code: "UAH", name: "UAH:", rate: 0 },
-        { code: "BTC", name: "BTC:", rate: 0 },
-      ],
       this.currencies.push(newCurrency);
       localStorage.setItem("currencies", JSON.stringify(this.currencies));
-      this.newCurrency = '';
+      this.newCurrency = "";
       this.updateCurrencies();
       this.showPopup = false;
     },
