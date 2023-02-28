@@ -1,9 +1,10 @@
-# project
+# SPA for currency conversion
 
 ## Project setup
 
-npm install
+-npm install
 
-clone the forked repo
+-clone the forked repo
 
-npm run serve
+-npm run serve
+
