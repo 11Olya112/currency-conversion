@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
-# перервати через помилки
-встановити -е
-# будувати
-пряжа біг буд
-# перейдіть до вихідного каталогу збирання
+# abort on errors
+set -e
+# build
+yarn run build
+# navigate into the build output directory
 cd dist
-# якщо ви розгортаєте власний домен
+# if you are deploying to a custom domain
 # echo 'www.example.com' > CNAME
 git init
 git add -A
 git commit -m 'deploy'
-git push -f git@github.com:11Olya112/currency-conversion.git master:gh-pages
+git push -f git@github.com:11Olya112/currency-conversion.git main:gh-pages
 cd -
