@@ -1,5 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: '/vue-pages/'
+  publicPath: process.env.NODE_ENV === 'production'
+  ? '/currency-conversion/'
+  : '/'
 })
